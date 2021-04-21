@@ -13,6 +13,7 @@ import { store, persistor } from './redux/store';
 
 import './index.css';
 import App from './App';
+import { resolvers, typeDefs } from './graphql/resolvers';
 
 const httpLink = createHttpLink({
   uri: 'https://crwn-clothing.com/'
@@ -21,20 +22,30 @@ const httpLink = createHttpLink({
 const cache = new InMemoryCache();
 const client = new ApolloClient({
   link: httpLink,
-  cache
+  cache,
+  resolvers,
+  typeDefs
 })
 
-// client.query({
-//   query: gql`{
-//     getCollectionsByTitle(title: "Hats") {
-//       title
-//       items {
-//         imageUrl
-//       }
-//     }
-//   }
-//   `
-// }).then(res =>console.log(res.data))
+client.writeData({
+  data: {
+    cartHidden: true,
+    cartItems: [],
+    itemCount: 0
+  }
+})
+
+client.query({
+  query: gql`{
+    getCollectionsByTitle(title: "Hats") {
+      title
+      items {
+        imageUrl
+      }
+    }
+  }
+  `
+}).then(res =>console.log(res.data))
 
 ReactDOM.render(
   <ApolloProvider client={client}>
