@@ -16,7 +16,7 @@ const GET_CART_ITEMS = gql`
     }
 `
 
-const CartDropdownContainer = () => (
+const CartDropdownContainer = () =>  (
     <Mutation mutation={TOGGLE_CART_HIDDEN}>
         {
             toggleCartHidden => (

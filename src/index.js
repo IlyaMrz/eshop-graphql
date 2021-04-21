@@ -12,7 +12,7 @@ import { ApolloClient, gql } from 'apollo-boost';
 import { store, persistor } from './redux/store';
 
 import './index.css';
-import App from './App';
+import {default as App} from './App.container';
 import { resolvers, typeDefs } from './graphql/resolvers';
 
 const httpLink = createHttpLink({
@@ -31,21 +31,23 @@ client.writeData({
   data: {
     cartHidden: true,
     cartItems: [],
-    itemCount: 0
+    itemCount: 0,
+    total: 0,
+    currentUser: null
   }
 })
 
-client.query({
-  query: gql`{
-    getCollectionsByTitle(title: "Hats") {
-      title
-      items {
-        imageUrl
-      }
-    }
-  }
-  `
-}).then(res =>console.log(res.data))
+// client.query({
+//   query: gql`{
+//     getCollectionsByTitle(title: "Hats") {
+//       title
+//       items {
+//         imageUrl
+//       }
+//     }
+//   }
+//   `
+// }).then(res =>console.log(res.data))
 
 ReactDOM.render(
   <ApolloProvider client={client}>
