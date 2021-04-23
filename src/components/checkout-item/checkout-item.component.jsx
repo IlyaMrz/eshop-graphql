@@ -2,7 +2,6 @@ import React from 'react';
 import { gql, useMutation} from '@apollo/client';
 
 import './checkout-item.styles.scss';
-// import CustomButton from '../custom-button/custom-button.component';
 
 
 const ADD_ITEM_TO_CART = gql`
@@ -22,10 +21,11 @@ const CLEAR_ITEM_FROM_CART = gql`
 `;
 
 
-const CheckoutItem = ( {cartItem} ) => { // WHY WORKS WITH ITEM BUT NOT WITH cartItem???? bc of variables!
-  // console.log(cartItem)
+const CheckoutItem = ( {cartItem} ) => { 
   const { name, imageUrl, price, quantity } = cartItem;
-  const [addItem] = useMutation(ADD_ITEM_TO_CART, {name:'addItemToCart',variables:{item: cartItem}})
+  const [addItem] = useMutation(ADD_ITEM_TO_CART, 
+    {name:'addItemToCart',variables:{item: cartItem}} // watch out for a variables!!
+    )
   const [removeItem] = useMutation(REMOVE_ITEM_FROM_CART, {name:'removeItemInCart',variables:{item: cartItem}})
   const [clearItem] = useMutation(CLEAR_ITEM_FROM_CART, {name:'clearItemFromCart',variables:{item: cartItem}})
   return (
