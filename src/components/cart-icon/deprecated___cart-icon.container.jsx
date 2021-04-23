@@ -18,7 +18,7 @@ const GET_ITEM_COUNT = gql`
 `
 
 const CartIconContainer = (props) =>{
-    console.log(props)
+    console.log('cartIconProps',props)
     return (
     <CartIcon itemCount={props.data.itemCount} 
         toggleCartHidden={props.toggleCartHidden}/>   

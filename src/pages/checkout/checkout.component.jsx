@@ -1,11 +1,25 @@
+import { useQuery, useReactiveVar, gql } from '@apollo/client';
 import React from 'react';
 
-import {default as CheckoutItem} from '../../components/checkout-item/checkout-item.container';
+import CheckoutItem from '../../components/checkout-item/checkout-item.component';
+
 import StripeCheckoutButton from '../../components/stripe-button/stripe-button.component';
 
 import './checkout.styles.scss';
 
-const CheckoutPage = ({ cartItems, total }) => (
+const GET_CART_ITEMS_AND_TOTAL = gql`
+    {
+        cartItems @client
+        total @client
+    }
+`
+
+const CheckoutPage = () =>{ 
+  const {loading, error, data} = useQuery(GET_CART_ITEMS_AND_TOTAL)
+  if (loading) return <div>loading....</div>
+  console.log('checkoutPage', data)
+  const { total, cartItems} = data;
+  return (
   <div className='checkout-page'>
     <div className='checkout-header'>
       <div className='header-block'>
@@ -35,6 +49,6 @@ const CheckoutPage = ({ cartItems, total }) => (
     </div>
     <StripeCheckoutButton price={total} />
   </div>
-);
+)};
 
 export default CheckoutPage;

@@ -4,22 +4,44 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import { ApolloProvider } from 'react-apollo';
-import { createHttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { ApolloClient, gql } from 'apollo-boost';
+import { ApolloProvider, 
+        ApolloClient, 
+        InMemoryCache, 
+        gql, makeVar, createHttpLink } from '@apollo/client';
 
 import { store, persistor } from './redux/store';
 
 import './index.css';
-import {default as App} from './App.container';
+import App from './App';
 import { resolvers, typeDefs } from './graphql/resolvers';
 
 const httpLink = createHttpLink({
   uri: 'https://crwn-clothing.com/'
 });
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  typePolicies:{
+    Query: {
+      fields: {
+        cartItems() {
+          return cartItemsVar();
+        },
+        cartHidden() {
+          return cartHiddenVar();
+        },
+        itemCount() {
+          return itemCountVar();
+        },
+        total() {
+          return totalVar();
+        },
+        currentUser() {
+          return currentUserVar();
+        }
+      }
+    }
+  }
+});
 const client = new ApolloClient({
   link: httpLink,
   cache,
@@ -27,27 +49,32 @@ const client = new ApolloClient({
   typeDefs
 })
 
-client.writeData({
-  data: {
-    cartHidden: true,
-    cartItems: [],
-    itemCount: 0,
-    total: 0,
-    currentUser: null
-  }
-})
 
-// client.query({
-//   query: gql`{
-//     getCollectionsByTitle(title: "Hats") {
-//       title
-//       items {
-//         imageUrl
-//       }
-//     }
-//   }
-//   `
-// }).then(res =>console.log(res.data))
+export const cartItemsVar = cache.makeVar([])
+export const cartHiddenVar = cache.makeVar(true)
+export const itemCountVar = cache.makeVar(0)
+export const totalVar = cache.makeVar(0)
+export const currentUserVar = cache.makeVar(null)
+
+client.query({
+  query: gql`{
+    getCollectionsByTitle(title: "Hats") {
+      title
+      items {
+        imageUrl
+      }
+    }
+  }
+  `
+}).then(res =>console.log('resdata',res.data))
+client.query({
+  query: gql`{
+    total
+  }
+  `
+}).then(res =>console.log('total',res.data))
+
+
 
 ReactDOM.render(
   <ApolloProvider client={client}>
