@@ -22,28 +22,6 @@ const CLEAR_ITEM_FROM_CART = gql`
 `;
 
 
-// const CheckoutItem = ({ item }) => {
-//   const { name, price, imageUrl } = item;
-//   const [addItem] = useMutation(ADD_ITEM_TO_CART, {name:'addItemToCart',variables:{item}})
-//   return (
-//     <div className='collection-item'>
-//       <div
-//         className='image'
-//         style={{
-//           backgroundImage: `url(${imageUrl})`
-//         }}
-//       />
-//       <div className='collection-footer'>
-//         <span className='name'>{name}</span>
-//         <span className='price'>{price}</span>
-//       </div>
-//       <CustomButton onClick={(e) => {e.preventDefault(); addItem()}} inverted>
-//         Add to cart
-//       </CustomButton>
-//     </div>
-//   );
-// };
-
 const CheckoutItem = ( {cartItem} ) => { // WHY WORKS WITH ITEM BUT NOT WITH cartItem???? bc of variables!
   // console.log(cartItem)
   const { name, imageUrl, price, quantity } = cartItem;
